@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Form Demo</h1>
+    <form id="myForm">
+      <input type="text" id="name" />
+      <input type="text" id="lname" />
+      <button type="submit">Submit</button>
+      <h2 id="result"></h2>
+    </form>
+
+    <script>
+      document.getElementById("myForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        let name = document.getElementById("name").value;
+        let lname = document.getElementById("lname").value;
+        let result = document.getElementById("result");
+        console.log(name, lname);
+        result.innerText = `Name : ${name} | lname: ${lname}`;
+      });
+    </script>
+  </body>
+</html>

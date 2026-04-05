@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        button {
+            margin-left: 5px;
+        }
+
+        input {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>To-Do List</h1>
+
+    <input type="text" id="taskInput">
+    <button id="addBtn">Add Task</button>
+
+    <h3>Task List</h3>
+    <ul id="taskList"></ul>
+
+    <script>
+        const addBtn = document.getElementById("addBtn");
+        const taskList = document.getElementById("taskList");
+        const taskInput = document.getElementById("taskInput");
+
+        let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+        // Render function
+        function renderTasks() {
+            taskList.innerHTML = "";
+
+            tasks.forEach((task, index) => {
+                const listItem = document.createElement("li");
+
+                const textSpan = document.createElement("span");
+                textSpan.textContent = task;
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "✏️";
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "❌";
+
+                // DELETE
+                deleteBtn.addEventListener("click", () => {
+                    tasks.splice(index, 1);
+                    saveAndRender();
+                });
+
+                // EDIT
+                editBtn.addEventListener("click", () => {
+                    listItem.innerHTML = "";
+
+                    const editInput = document.createElement("input");
+                    editInput.value = task;
+
+                    const saveBtn = document.createElement("button");
+                    saveBtn.textContent = "Save";
+
+                    const cancelBtn = document.createElement("button");
+                    cancelBtn.textContent = "Cancel";
+
+                    // SAVE
+                    saveBtn.addEventListener("click", () => {
+                        if (editInput.value === "") return;
+
+                        tasks[index] = editInput.value;
+                        saveAndRender();
+                    });
+
+                    // CANCEL
+                    cancelBtn.addEventListener("click", () => {
+                        renderTasks();
+                    });
+
+                    listItem.appendChild(editInput);
+                    listItem.appendChild(saveBtn);
+                    listItem.appendChild(cancelBtn);
+                });
+
+                listItem.appendChild(textSpan);
+                listItem.appendChild(editBtn);
+                listItem.appendChild(deleteBtn);
+
+                taskList.appendChild(listItem);
+            });
+        }
+
+        function saveAndRender() {
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        // Add Task
+        addBtn.addEventListener("click", () => {
+            if (taskInput.value === "") return;
+
+            tasks.push(taskInput.value);
+            taskInput.value = "";
+
+            saveAndRender();
+        });
+
+        renderTasks();
+    </script>
+
+</body>
+</html>
